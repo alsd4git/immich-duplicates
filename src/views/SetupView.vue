@@ -19,6 +19,9 @@ if (window.env.DUPES_JSON_FROM_DOCKER!=="[]") {
 if (window.env.API_KEY_FROM_DOCKER!=="") {
   apiKey.value = window.env.API_KEY_FROM_DOCKER
 }
+if (window.env.IMMICH_URL!=="") {
+  baseUrlOverride.value = window.env.IMMICH_URL
+}
 
 
 function setUpStores() {
