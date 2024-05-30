@@ -16,6 +16,7 @@ COPY ./nginx/nginx.conf /etc/nginx
 
 ENV IMMICH_URL=https://immich.example.com
 ENV DUPES_JSON_FROM_DOCKER="[]"
+ENV API_KEY_FROM_DOCKER=""
 
 RUN mkdir -p /etc/nginx/templates
 COPY ./nginx/immich-proxy.conf.template /etc/nginx/templates

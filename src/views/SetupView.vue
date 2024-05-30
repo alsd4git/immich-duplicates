@@ -16,6 +16,10 @@ const message = ref<string>('')
 if (window.env.DUPES_JSON_FROM_DOCKER!=="[]") {
   duplicates.value = window.env.DUPES_JSON_FROM_DOCKER
 }
+if (window.env.API_KEY_FROM_DOCKER!=="") {
+  apiKey.value = window.env.API_KEY_FROM_DOCKER
+}
+
 
 function setUpStores() {
   api.endpoint = endpoint.value
