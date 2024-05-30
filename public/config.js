@@ -1,0 +1,3 @@
+window.env = {
+  DUPES_JSON_FROM_DOCKER: "__DUPES_JSON_FROM_DOCKER__"
+};

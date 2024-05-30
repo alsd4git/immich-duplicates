@@ -13,13 +13,16 @@ const baseUrlOverride = ref(api.baseUrlOverride)
 const apiKey = ref(api.apiKey)
 const duplicates = ref(JSON.stringify(data.duplicates))
 const message = ref<string>('')
+if (window.env.DUPES_JSON_FROM_DOCKER!=="[]") {
+  duplicates.value = window.env.DUPES_JSON_FROM_DOCKER
+}
 
 function setUpStores() {
   api.endpoint = endpoint.value
   api.apiKey = apiKey.value
   api.baseUrlOverride = baseUrlOverride.value
 
-  data.duplicates = JSON.parse(duplicates.value)
+   data.duplicates = JSON.parse(duplicates.value)
 
   if (Object.keys(data.duplicates).length) {
     router.push('/')
@@ -31,6 +34,9 @@ function setUpStores() {
 function setUpLocalhostProxy() {
   endpoint.value = `${window.location.origin}/api`
 }
+
+// console.log(window.env.DUPES_JSON_FROM_DOCKER)
+
 </script>
 
 <template>
