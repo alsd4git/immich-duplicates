@@ -5,6 +5,7 @@ echo "replacing env at runtime"
 sed -i "s|__DUPES_JSON_FROM_DOCKER__|${DUPES_JSON_FROM_DOCKER}|g" /usr/share/nginx/html/config.js
 sed -i "s|__API_KEY_FROM_DOCKER__|${API_KEY_FROM_DOCKER}|g" /usr/share/nginx/html/config.js
 sed -i "s|__IMMICH_URL__|${IMMICH_URL}|g" /usr/share/nginx/html/config.js
+sed -i "s|__IMMICH_DISPLAY_URL__|${IMMICH_DISPLAY_URL}|g" /usr/share/nginx/html/config.js
 
 # # Start Nginx
 # exec "$@"
