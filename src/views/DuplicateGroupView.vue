@@ -14,9 +14,8 @@ const props = defineProps<{
 const data = useDataStore()
 let immich_url = "https://github.com/immich-app/immich"
 
-if (window.env.IMMICH_URL !== '' && !window.env.IMMICH_URL.startsWith('__')) {
-  // baseUrlOverride.value = window.env.IMMICH_URL
-  immich_url = window.env.IMMICH_URL
+if (window.env.IMMICH_DISPLAY_URL !== '' && !window.env.IMMICH_DISPLAY_URL.startsWith('__')) {
+  immich_url = window.env.IMMICH_DISPLAY_URL
 }
 
 function hasPrevious() {

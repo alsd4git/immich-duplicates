@@ -24,3 +24,4 @@ COPY ./nginx/immich-proxy.conf.template /etc/nginx/templates
 
 COPY ["replace-env.sh", "/docker-entrypoint.d/replace-env.sh"]
 RUN chown nginx:nginx /docker-entrypoint.d/replace-env.sh
+RUN chmod +x /docker-entrypoint.d/replace-env.sh

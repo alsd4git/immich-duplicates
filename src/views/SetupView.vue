@@ -13,7 +13,7 @@ const baseUrlOverride = ref(api.baseUrlOverride)
 const apiKey = ref(api.apiKey)
 const duplicates = ref(JSON.stringify(data.duplicates))
 const message = ref<string>('')
-let immich_url="https://github.com/immich-app/immich"
+let immich_url = 'https://github.com/immich-app/immich'
 if (
   window.env.DUPES_JSON_FROM_DOCKER !== '[]' &&
   !window.env.DUPES_JSON_FROM_DOCKER.startsWith('__')
@@ -25,7 +25,9 @@ if (window.env.API_KEY_FROM_DOCKER !== '' && !window.env.API_KEY_FROM_DOCKER.sta
 }
 if (window.env.IMMICH_URL !== '' && !window.env.IMMICH_URL.startsWith('__')) {
   baseUrlOverride.value = window.env.IMMICH_URL
-  immich_url = window.env.IMMICH_URL
+}
+if (window.env.IMMICH_DISPLAY_URL !== '' && !window.env.IMMICH_DISPLAY_URL.startsWith('__')) {
+  immich_url = window.env.IMMICH_DISPLAY_URL
 }
 
 function setUpStores() {
