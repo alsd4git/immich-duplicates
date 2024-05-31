@@ -12,6 +12,12 @@ const props = defineProps<{
 }>()
 
 const data = useDataStore()
+let immich_url = "https://github.com/immich-app/immich"
+
+if (window.env.IMMICH_URL !== '' && !window.env.IMMICH_URL.startsWith('__')) {
+  // baseUrlOverride.value = window.env.IMMICH_URL
+  immich_url = window.env.IMMICH_URL
+}
 
 function hasPrevious() {
   if (props.index > 0) {
@@ -69,7 +75,15 @@ onBeforeUnmount(() => {
 
 <template>
   <main>
+    <div style="display: flex">
     <header>{{ Object.keys(data.duplicates).length }} Groups</header>
+    <a :href="immich_url" target="_blank" style="margin-left: auto">
+        <img
+          src="https://github.com/immich-app/immich/raw/main/design/immich-logo-stacked-light.svg"
+          height="100"
+        />
+      </a>
+    </div>
 
     <button @click="router.push('/setup')">Setup</button>
     <button :disabled="hasPrevious() === false" @click="previous()">

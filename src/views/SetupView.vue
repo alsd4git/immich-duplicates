@@ -13,23 +13,27 @@ const baseUrlOverride = ref(api.baseUrlOverride)
 const apiKey = ref(api.apiKey)
 const duplicates = ref(JSON.stringify(data.duplicates))
 const message = ref<string>('')
-if (window.env.DUPES_JSON_FROM_DOCKER!=="[]") {
+let immich_url="https://github.com/immich-app/immich"
+if (
+  window.env.DUPES_JSON_FROM_DOCKER !== '[]' &&
+  !window.env.DUPES_JSON_FROM_DOCKER.startsWith('__')
+) {
   duplicates.value = window.env.DUPES_JSON_FROM_DOCKER
 }
-if (window.env.API_KEY_FROM_DOCKER!=="") {
+if (window.env.API_KEY_FROM_DOCKER !== '' && !window.env.API_KEY_FROM_DOCKER.startsWith('__')) {
   apiKey.value = window.env.API_KEY_FROM_DOCKER
 }
-if (window.env.IMMICH_URL!=="") {
+if (window.env.IMMICH_URL !== '' && !window.env.IMMICH_URL.startsWith('__')) {
   baseUrlOverride.value = window.env.IMMICH_URL
+  immich_url = window.env.IMMICH_URL
 }
-
 
 function setUpStores() {
   api.endpoint = endpoint.value
   api.apiKey = apiKey.value
   api.baseUrlOverride = baseUrlOverride.value
 
-   data.duplicates = JSON.parse(duplicates.value)
+  data.duplicates = JSON.parse(duplicates.value)
 
   if (Object.keys(data.duplicates).length) {
     router.push('/')
@@ -43,60 +47,60 @@ function setUpLocalhostProxy() {
 }
 
 // console.log(window.env.DUPES_JSON_FROM_DOCKER)
-
 </script>
 
 <template>
   <main>
-    <h1>Setup</h1>
+    <div style="display: flex">
+      <h1>Setup</h1>
+
+      <a :href="immich_url" target="_blank" style="margin-left: auto">
+        <img
+          src="https://github.com/immich-app/immich/raw/main/design/immich-logo-stacked-light.svg"
+          height="100"
+        />
+      </a>
+    </div>
 
     <h2>Immich</h2>
     <section>
       <label for="endpoint">API Endpoint URL (including <code>/api</code>)</label>
-      <input v-model="endpoint"
-             type="text"
-             name="endpoint" />
+      <input v-model="endpoint" type="text" name="endpoint" />
       <ul>
         <li>
           <code>https://immich.example.com/api</code>
-          <br>
+          <br />
           If you configured your Immich server to support CORS.
         </li>
         <li>
           <code>http://localhost:8080/api</code>
-          <br>
-          If you used <code>--env IMMICH_URL=...</code> to run the duplicate
-          browser. <a @click="setUpLocalhostProxy"
-             href="#">Click here to automatically set.</a>
+          <br />
+          If you used <code>--env IMMICH_URL=...</code> to run the duplicate browser.
+          <a @click="setUpLocalhostProxy" href="#">Click here to automatically set.</a>
         </li>
       </ul>
     </section>
     <section>
       <label for="baseUrlOverride">Base URL</label>
-      <input v-model="baseUrlOverride"
-             type="text"
-             name="baseUrlOverride" />
+      <input v-model="baseUrlOverride" type="text" name="baseUrlOverride" />
       <p>
-        Not required if your Immich server supports CORS. Otherwise, the base
-        address of your Immich server, i.e. the address shown in your browser's
-        address bar after logging into Immich, without trailing
-        <code>/photos</code>.<br>
+        Not required if your Immich server supports CORS. Otherwise, the base address of your Immich
+        server, i.e. the address shown in your browser's address bar after logging into Immich,
+        without trailing
+        <code>/photos</code>.<br />
         Example: <code>https://immich.example.com/</code>
       </p>
     </section>
 
     <section>
       <label for="endpoint">API Key</label>
-      <input v-model="apiKey"
-             type="text"
-             name="apiKey" />
+      <input v-model="apiKey" type="text" name="apiKey" />
     </section>
 
     <h2>JSON document with duplicates</h2>
     <section>
       <label for="duplicates">The format is <code>string[][]</code></label>
-      <textarea name="duplicates"
-                v-model="duplicates"></textarea>
+      <textarea name="duplicates" v-model="duplicates"></textarea>
     </section>
 
     <button @click="setUpStores">OK</button>
