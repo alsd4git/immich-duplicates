@@ -48,6 +48,37 @@ function setUpLocalhostProxy() {
   endpoint.value = `${window.location.origin}/api`
 }
 
+function emptyLocal() {
+  localStorage.clear()
+  location.reload()
+}
+
+/**
+ * Checks if the application is using a Docker environment.
+ *
+ * @return {boolean} Returns true if the application is using a Docker environment, false otherwise.
+ */
+function isUsingDockerEnv() {
+  if (
+    window.env.DUPES_JSON_FROM_DOCKER !== '[]' &&
+    !window.env.DUPES_JSON_FROM_DOCKER.startsWith('__')
+  ) {
+    return true
+  }
+  if (window.env.API_KEY_FROM_DOCKER !== '' && !window.env.API_KEY_FROM_DOCKER.startsWith('__')) {
+    return true
+  }
+
+  //actually, we don't really care for those, the important ones are the other two
+  // if (window.env.IMMICH_URL !== '' && !window.env.IMMICH_URL.startsWith('__')) {
+  //   return true
+  // }
+  // if (window.env.IMMICH_DISPLAY_URL !== '' && !window.env.IMMICH_DISPLAY_URL.startsWith('__')) {
+  //   return true
+  // }
+  return false
+}
+
 // console.log(window.env.DUPES_JSON_FROM_DOCKER)
 </script>
 
@@ -65,6 +96,7 @@ function setUpLocalhostProxy() {
     </div>
 
     <h2>Immich</h2>
+    <button v-if="isUsingDockerEnv()" @click="emptyLocal">Empty Localstorage & reload</button>
     <section>
       <label for="endpoint">API Endpoint URL (including <code>/api</code>)</label>
       <input v-model="endpoint" type="text" name="endpoint" />
