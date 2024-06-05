@@ -1,7 +1,11 @@
 name: Build and package
 
 on:
-  - push
+  push:
+    tags:
+      - "*.*.*"
+  #manual trigger
+  workflow_dispatch:
 
 jobs:
   docker-image:
@@ -26,7 +30,9 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      # pull code
+      - name: Check Out Repo
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -50,11 +56,22 @@ jobs:
           # Generate Docker tags based on the following events/attributes.
           # https://github.com/docker/metadata-action#tags-input
           tags: |
-            type=ref,event=branch
-            # Set latest tag for the default branch.
-            type=raw,value=latest,enable={{ is_default_branch }}
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}
+            type=semver,pattern={{major}}.{{minor}}
           labels: |
             org.opencontainers.image.title=${{ matrix.title }}
+
+
+      - name: Set Docker Tag
+        id: set-tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "::set-output name=docker_tag::testing"
+          else
+            echo "::set-output name=docker_tag::${{ steps.meta.outputs.tags }}"
+          fi
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -62,7 +79,7 @@ jobs:
           context: ${{ matrix.context }}
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ matrix.image }}:${{ steps.set-tag.outputs.docker_tag }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
